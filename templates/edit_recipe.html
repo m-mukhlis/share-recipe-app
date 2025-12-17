@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Recipe - Recipe Share{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Edit Recipe</h2>
+                
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Recipe Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required 
+                               minlength="5" value="{{ recipe.title }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" required 
+                                  rows="3">{{ recipe.description }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ingredients" class="form-label">Ingredients</label>
+                        <textarea class="form-control" id="ingredients" name="ingredients" required 
+                                  rows="4">{{ recipe.ingredients }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="instructions" class="form-label">Instructions</label>
+                        <textarea class="form-control" id="instructions" name="instructions" required 
+                                  rows="5">{{ recipe.instructions }}</textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="cooking_time" class="form-label">Cooking Time (minutes)</label>
+                            <input type="number" class="form-control" id="cooking_time" name="cooking_time" 
+                                   min="0" value="{{ recipe.cooking_time or '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="servings" class="form-label">Servings</label>
+                            <input type="number" class="form-control" id="servings" name="servings" 
+                                   min="1" value="{{ recipe.servings or '' }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="difficulty" class="form-label">Difficulty Level</label>
+                        <select class="form-control" id="difficulty" name="difficulty">
+                            <option value="Easy" {% if recipe.difficulty == 'Easy' %}selected{% endif %}>Easy</option>
+                            <option value="Medium" {% if recipe.difficulty == 'Medium' %}selected{% endif %}>Medium</option>
+                            <option value="Hard" {% if recipe.difficulty == 'Hard' %}selected{% endif %}>Hard</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Recipe Image</label>
+                        {% if recipe.image_filename %}
+                            <div class="mb-2">
+                                <img src="{{ url_for('download_file', filename=recipe.image_filename) }}" 
+                                     alt="{{ recipe.title }}" style="max-width: 200px; border-radius: 8px;">
+                                <p class="small text-muted mt-1">Current image</p>
+                            </div>
+                        {% endif %}
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                        <small class="form-text text-muted">Leave empty to keep current image</small>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a href="{{ url_for('view_recipe', recipe_id=recipe.id) }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

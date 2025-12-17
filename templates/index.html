@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Recipe Share{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1 class="display-4">Welcome to Recipe Share</h1>
+    <p class="lead">Discover and share delicious food recipes from around the world</p>
+    {% if not current_user.is_authenticated %}
+        <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">Get Started</a>
+    {% else %}
+        <a href="{{ url_for('new_recipe') }}" class="btn btn-light btn-lg">Share Your Recipe</a>
+    {% endif %}
+</div>
+
+<h2 class="mb-4">Latest Recipes</h2>
+
+{% if recipes.items %}
+    <div class="row">
+        {% for recipe in recipes.items %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    {% if recipe.image_filename %}
+                        <img src="{{ url_for('download_file', filename=recipe.image_filename) }}" class="recipe-image" alt="{{ recipe.title }}">
+                    {% else %}
+                        <div class="recipe-image bg-secondary d-flex align-items-center justify-content-center">
+                            <span class="text-white">No Image</span>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recipe.title }}</h5>
+                        <p class="card-text text-muted small">{{ recipe.description[:100] }}...</p>
+                        
+                        <div class="mb-3">
+                            <span class="badge bg-primary">{{ recipe.difficulty }}</span>
+                            {% if recipe.cooking_time %}
+                                <span class="badge bg-info">⏱️ {{ recipe.cooking_time }}min</span>
+                            {% endif %}
+                            {% if recipe.servings %}
+                                <span class="badge bg-success">🍽️ {{ recipe.servings }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        <small class="text-muted">By <strong>{{ recipe.author.username }}</strong></small><br>
+                        <small class="text-muted">{{ recipe.created_at.strftime('%B %d, %Y') }}</small>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <a href="{{ url_for('view_recipe', recipe_id=recipe.id) }}" class="btn btn-primary btn-sm w-100">View Recipe</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if recipes.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('index', page=recipes.prev_num) }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            {% endif %}
+
+            {% for page_num in recipes.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num == recipes.page %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if recipes.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('index', page=recipes.next_num) }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% else %}
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">No recipes yet!</h4>
+        <p>Be the first to share your delicious recipe. {% if not current_user.is_authenticated %}<a href="{{ url_for('register') }}">Register now</a>{% endif %}</p>
+    </div>
+{% endif %}
+{% endblock %}

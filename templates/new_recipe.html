@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}New Recipe - Recipe Share{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Create New Recipe</h2>
+                
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Recipe Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required 
+                               minlength="5" placeholder="e.g., Spaghetti Carbonara">
+                        <small class="form-text text-muted">At least 5 characters</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" required 
+                                  rows="3" placeholder="Describe your recipe..."></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ingredients" class="form-label">Ingredients</label>
+                        <textarea class="form-control" id="ingredients" name="ingredients" required 
+                                  rows="4" placeholder="List ingredients (one per line)&#10;- 200g pasta&#10;- 100g bacon&#10;- 2 eggs"></textarea>
+                        <small class="form-text text-muted">One ingredient per line</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="instructions" class="form-label">Instructions</label>
+                        <textarea class="form-control" id="instructions" name="instructions" required 
+                                  rows="5" placeholder="Step-by-step cooking instructions..."></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="cooking_time" class="form-label">Cooking Time (minutes)</label>
+                            <input type="number" class="form-control" id="cooking_time" name="cooking_time" 
+                                   min="0" placeholder="30">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="servings" class="form-label">Servings</label>
+                            <input type="number" class="form-control" id="servings" name="servings" 
+                                   min="1" placeholder="4">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="difficulty" class="form-label">Difficulty Level</label>
+                        <select class="form-control" id="difficulty" name="difficulty">
+                            <option value="Easy">Easy</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Recipe Image</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                        <small class="form-text text-muted">Allowed: JPG, PNG, GIF (Max 16MB)</small>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Create Recipe</button>
+                        <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}My Recipes - Recipe Share{% endblock %}
+
+{% block content %}
+<div class="mt-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>My Recipes</h2>
+        <a href="{{ url_for('new_recipe') }}" class="btn btn-primary">+ New Recipe</a>
+    </div>
+</div>
+
+{% if recipes.items %}
+    <div class="row">
+        {% for recipe in recipes.items %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    {% if recipe.image_filename %}
+                        <img src="{{ url_for('download_file', filename=recipe.image_filename) }}" 
+                             class="recipe-image" alt="{{ recipe.title }}">
+                    {% else %}
+                        <div class="recipe-image bg-secondary d-flex align-items-center justify-content-center">
+                            <span class="text-white">No Image</span>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recipe.title }}</h5>
+                        <p class="card-text text-muted small">{{ recipe.description[:80] }}...</p>
+                        
+                        <div class="mb-3">
+                            <span class="badge bg-primary">{{ recipe.difficulty }}</span>
+                            {% if recipe.cooking_time %}
+                                <span class="badge bg-info">⏱️ {{ recipe.cooking_time }}min</span>
+                            {% endif %}
+                        </div>
+                        
+                        <small class="text-muted">{{ recipe.created_at.strftime('%B %d, %Y') }}</small>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <a href="{{ url_for('view_recipe', recipe_id=recipe.id) }}" class="btn btn-primary btn-sm">View</a>
+                        <a href="{{ url_for('edit_recipe', recipe_id=recipe.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form method="POST" action="{{ url_for('delete_recipe', recipe_id=recipe.id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this recipe?')">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if recipes.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('my_recipes', page=recipes.prev_num) }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            {% endif %}
+
+            {% for page_num in recipes.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num == recipes.page %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('my_recipes', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if recipes.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('my_recipes', page=recipes.next_num) }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% else %}
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">You haven't shared any recipes yet!</h4>
+        <p><a href="{{ url_for('new_recipe') }}">Create your first recipe</a> and start sharing.</p>
+    </div>
+{% endif %}
+{% endblock %}
