@@ -503,7 +503,7 @@ You now have a **complete, secure, production-ready recipe sharing web applicati
 
 ---
 
-**Last Updated:** December 2024  
+**Last Updated:** December 2025
 **Framework:** Flask 2.3.3  
 **Python:** 3.7+  
 **Total Setup Time:** 5 minutes
