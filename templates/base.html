@@ -76,12 +76,31 @@
                         <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                     </li>
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('new_recipe') }}">+ New Recipe</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('my_recipes') }}">My Recipes</a>
-                        </li>
+                        {% if current_user.role == 'user' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('new_recipe') }}">+ New Recipe</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('my_recipes') }}">My Recipes</a>
+                            </li>
+                        {% elif current_user.role == 'employee' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('employee_dashboard') }}">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('share_file') }}">Share Recipe</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('employee_my_files') }}">My Recipes</a>
+                            </li>
+                        {% elif current_user.role == 'admin' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin Panel</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('admin_view_shared_files') }}">Shared Files</a>
+                            </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
                         </li>

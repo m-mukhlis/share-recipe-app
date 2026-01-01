@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Employee Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="mb-2">Welcome, {{ current_user.username }}!</h1>
+            <p class="text-muted">Employee Dashboard</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Shared Recipes</h5>
+                    <h2>{{ files_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Your Role</h5>
+                    <h2>Employee</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">User Since</h5>
+                    <p class="mb-0">{{ current_user.created_at.strftime('%b %d, %Y') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('share_file') }}" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Share New Recipe PDF
+                    </a>
+                    <a href="{{ url_for('employee_my_files') }}" class="btn btn-info">
+                        <i class="fas fa-file-pdf"></i> View My Shared Recipes
+                    </a>
+                    <a href="{{ url_for('profile') }}" class="btn btn-secondary">
+                        <i class="fas fa-user"></i> My Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rules & Information -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Employee Guidelines</h5>
+                </div>
+                <div class="card-body">
+                    <h6>What you can do:</h6>
+                    <ul>
+                        <li>✅ Share secret recipe PDFs with descriptive information</li>
+                        <li>✅ View and manage all your uploaded recipes</li>
+                        <li>✅ Download your own uploaded files</li>
+                        <li>✅ Change your password anytime</li>
+                        <li>✅ Delete your own account</li>
+                    </ul>
+
+                    <h6 class="mt-4">File Requirements:</h6>
+                    <ul>
+                        <li>📄 Only PDF files are accepted</li>
+                        <li>📊 Maximum file size: 16 MB</li>
+                        <li>📝 Please provide clear descriptions for recipes</li>
+                    </ul>
+
+                    <h6 class="mt-4">Account Security:</h6>
+                    <ul>
+                        <li>🔐 If you fail to login 3 times, your account will be temporarily locked</li>
+                        <li>🔐 Admin can grant you permission to reset your username if locked</li>
+                        <li>🔐 Always use a strong password</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

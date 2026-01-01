@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}My Shared Recipes{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="mb-4">My Shared Recipes</h1>
+            <div class="btn-group" role="group">
+                <a href="{{ url_for('employee_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+                <a href="{{ url_for('share_file') }}" class="btn btn-success">Share New Recipe</a>
+            </div>
+        </div>
+    </div>
+
+    {% if shared_files.items %}
+    <div class="row">
+        {% for file in shared_files.items %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-file-pdf text-danger"></i> {{ file.original_filename }}
+                    </h5>
+                    
+                    {% if file.description %}
+                    <p class="card-text text-muted">
+                        {{ file.description[:150] }}{% if file.description|length > 150 %}...{% endif %}
+                    </p>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <small class="d-block text-muted">
+                            📊 Size: {{ (file.file_size / 1024)|round(2) }} KB
+                        </small>
+                        <small class="d-block text-muted">
+                            📅 Uploaded: {{ file.created_at.strftime('%B %d, %Y at %H:%M') }}
+                        </small>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <a href="{{ url_for('download_employee_file', file_id=file.id) }}" 
+                       class="btn btn-sm btn-primary">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                    <form method="POST" action="{{ url_for('delete_shared_file', file_id=file.id) }}" 
+                          style="display:inline;" 
+                          onsubmit="return confirm('Are you sure you want to delete this recipe? This action cannot be undone.');">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if shared_files.pages > 1 %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if shared_files.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('employee_my_files', page=shared_files.prev_num) }}">Previous</a>
+            </li>
+            {% endif %}
+            
+            {% for page_num in shared_files.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num == shared_files.page %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_num }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('employee_my_files', page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            
+            {% if shared_files.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('employee_my_files', page=shared_files.next_num) }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+    {% else %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info" role="alert">
+                <h5 class="alert-heading">No Shared Recipes Yet</h5>
+                <p class="mb-0">You haven't shared any recipe PDFs yet. Click the button below to share your first secret recipe!</p>
+            </div>
+            <a href="{{ url_for('share_file') }}" class="btn btn-success btn-lg">
+                <i class="fas fa-cloud-upload-alt"></i> Share Your First Recipe
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

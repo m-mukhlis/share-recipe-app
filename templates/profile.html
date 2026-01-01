@@ -4,8 +4,8 @@
 
 {% block content %}
 <div class="row mt-4">
-    <div class="col-md-6 mx-auto">
-        <div class="card">
+    <div class="col-md-8 mx-auto">
+        <div class="card mb-4">
             <div class="card-body text-center">
                 <div class="mb-4">
                     <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
@@ -16,12 +16,22 @@
                 <h2>{{ current_user.username }}</h2>
                 <p class="text-muted">{{ current_user.email }}</p>
                 
+                <div class="badge" style="font-size: 1rem;">
+                    {% if current_user.role == 'admin' %}
+                        <span class="badge bg-danger">Admin</span>
+                    {% elif current_user.role == 'employee' %}
+                        <span class="badge bg-success">Employee</span>
+                    {% else %}
+                        <span class="badge bg-primary">User</span>
+                    {% endif %}
+                </div>
+                
                 <hr>
                 
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <h4 class="text-primary">{{ recipe_count }}</h4>
-                        <p class="text-muted">Recipes Shared</p>
+                        <p class="text-muted">{% if current_user.role == 'employee' %}Recipes Shared{% else %}Recipes Created{% endif %}</p>
                     </div>
                     <div class="col-md-6">
                         <h4 class="text-success">{{ comment_count }}</h4>
@@ -30,11 +40,54 @@
                 </div>
                 
                 <p class="text-muted small">Member since {{ current_user.created_at.strftime('%B %d, %Y') }}</p>
-                
-                <div class="d-flex gap-2 justify-content-center mt-4">
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Profile Actions</h5>
+            </div>
+            <div class="card-body">
+                {% if current_user.role == 'user' %}
                     <a href="{{ url_for('my_recipes') }}" class="btn btn-primary">My Recipes</a>
                     <a href="{{ url_for('new_recipe') }}" class="btn btn-success">+ New Recipe</a>
-                </div>
+                {% elif current_user.role == 'employee' %}
+                    <a href="{{ url_for('employee_dashboard') }}" class="btn btn-primary">Dashboard</a>
+                    <a href="{{ url_for('employee_my_files') }}" class="btn btn-info">My Shared Recipes</a>
+                    <a href="{{ url_for('share_file') }}" class="btn btn-success">Share New Recipe</a>
+                {% elif current_user.role == 'admin' %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary">Admin Panel</a>
+                    <a href="{{ url_for('admin_view_shared_files') }}" class="btn btn-info">View All Files</a>
+                {% endif %}
+                
+                <a href="{{ url_for('change_password') }}" class="btn btn-warning">Change Password</a>
+                <a href="{{ url_for('delete_account') }}" class="btn btn-danger">Delete Account</a>
+            </div>
+        </div>
+
+        <!-- Security Info -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Security Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Account Status:</strong> {% if current_user.is_locked() %}<span class="badge bg-danger">Locked</span>{% else %}<span class="badge bg-success">Active</span>{% endif %}</p>
+                <p><strong>Failed Login Attempts:</strong> {{ current_user.login_attempts }}/3</p>
+                {% if current_user.username_reset_enabled %}
+                    <p><span class="badge bg-warning">Username Reset Enabled</span> - You can reset your username</p>
+                {% endif %}
+                
+                <hr>
+                <small class="text-muted">
+                    <strong>Password Security Tips:</strong>
+                    <ul>
+                        <li>Use a strong password with mixed case and numbers</li>
+                        <li>Don't share your password with anyone</li>
+                        <li>Change your password regularly</li>
+                        <li>Your account will be locked after 3 failed login attempts</li>
+                    </ul>
+                </small>
             </div>
         </div>
     </div>

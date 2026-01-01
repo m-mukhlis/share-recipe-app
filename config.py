@@ -11,6 +11,7 @@ class Config:
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
     ALLOWED_EXTENSIONS = {'pdf', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'doc', 'docx'}
+    EMPLOYEE_ALLOWED_EXTENSIONS = {'pdf'}  # Employees can only share PDFs
     
     # Session settings
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)

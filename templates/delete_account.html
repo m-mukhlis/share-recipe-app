@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Account{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Delete Account</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning" role="alert">
+                        <strong>⚠️ Warning!</strong> This action is permanent and cannot be undone.
+                    </div>
+                    
+                    <p>When you delete your account:</p>
+                    <ul>
+                        <li>Your account will be permanently deleted</li>
+                        <li>All your recipes will be deleted</li>
+                        <li>All your comments will be deleted</li>
+                        <li>All your uploaded files will be deleted</li>
+                        <li>This action cannot be reversed</li>
+                    </ul>
+
+                    <form method="POST" action="{{ url_for('delete_account') }}">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Confirm Your Password</label>
+                            <input type="password" class="form-control" id="password" 
+                                   name="password" required>
+                            <small class="text-muted">Enter your password to confirm deletion</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confirm_delete" class="form-label">Type DELETE to confirm</label>
+                            <input type="text" class="form-control" id="confirm_delete" 
+                                   name="confirm_delete" placeholder="Type DELETE" required>
+                            <small class="text-muted">You must type "DELETE" exactly to proceed</small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger">Delete My Account</button>
+                            <a href="{{ url_for('profile') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

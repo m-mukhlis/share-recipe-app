@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Share Recipe PDF{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Share Secret Recipe PDF</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('share_file') }}" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Recipe Description</label>
+                            <textarea class="form-control" id="description" name="description" 
+                                      rows="4" placeholder="Describe the secret recipe..."></textarea>
+                            <small class="text-muted">Optional: Add cooking instructions, ingredients, or any special notes</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Select PDF File</label>
+                            <input type="file" class="form-control" id="file" name="file" 
+                                   accept=".pdf" required>
+                            <small class="text-muted">
+                                ✅ Only PDF files are accepted<br>
+                                📊 Maximum file size: 16 MB<br>
+                                🔒 Files are securely stored
+                            </small>
+                        </div>
+
+                        <div class="alert alert-info" role="alert">
+                            <strong>📋 Before uploading:</strong>
+                            <ul class="mb-0">
+                                <li>Make sure the file is in PDF format</li>
+                                <li>File size does not exceed 16 MB</li>
+                                <li>Recipe description is clear and helpful</li>
+                                <li>All confidential information is included</li>
+                            </ul>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-cloud-upload-alt"></i> Share Recipe
+                            </button>
+                            <a href="{{ url_for('employee_dashboard') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0">💡 Tips for Sharing</h6>
+                </div>
+                <div class="card-body">
+                    <p><strong>File Preparation:</strong></p>
+                    <ul>
+                        <li>Ensure your PDF is properly formatted and readable</li>
+                        <li>Include all recipe components: ingredients, instructions, cooking tips</li>
+                        <li>Add your name or signature to claim authorship</li>
+                    </ul>
+
+                    <p><strong>Security:</strong></p>
+                    <ul>
+                        <li>Your files are stored securely on our servers</li>
+                        <li>Only admin and you can manage access to your files</li>
+                        <li>You can delete files anytime</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
