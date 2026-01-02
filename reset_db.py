@@ -5,6 +5,9 @@ import os
 import sys
 from app import app, db
 from models import User, UserRole
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def reset_database():
     """Drop all tables and recreate them"""
